@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Train_Reservation_System_Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="AdminAccount">
+    <Key>
+      <PropertyRef Name="admin_id" />
+    </Key>
+    <Property Name="admin_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="admin_name" Type="varchar" MaxLength="40" />
+    <Property Name="admin_email_id" Type="varchar" MaxLength="40" />
+    <Property Name="admin_password" Type="varchar" MaxLength="40" />
+  </EntityType>
+  <EntityType Name="Bookings">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="user_id" Type="int" />
+    <Property Name="username" Type="varchar" MaxLength="50" />
+    <Property Name="age" Type="int" />
+    <Property Name="train_id" Type="int" />
+    <Property Name="pnr_no" Type="int" />
+    <Property Name="train_name" Type="varchar" MaxLength="50" />
+    <Property Name="booking_date" Type="date" />
+    <Property Name="arrival_time" Type="time" Precision="7" />
+    <Property Name="departure_time" Type="time" Precision="7" />
+    <Property Name="trainClass" Type="varchar" MaxLength="20" />
+    <Property Name="total_price" Type="float" />
+    <Property Name="seat_no" Type="int" />
+    <Property Name="status" Type="varchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="TrainPrice">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="train_id" Type="int" />
+    <Property Name="train_name" Type="varchar" MaxLength="50" />
+    <Property Name="first_class_price" Type="float" />
+    <Property Name="second_class_price" Type="float" />
+    <Property Name="sleeper_class_price" Type="float" />
+    <Property Name="first_class_tickets_available" Type="int" />
+    <Property Name="second_class_tickets_available" Type="int" />
+    <Property Name="sleeper_class_tickets_available" Type="int" />
+    <Property Name="total_available_tickets" Type="int" StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="Trains">
+    <Key>
+      <PropertyRef Name="train_id" />
+    </Key>
+    <Property Name="train_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="train_name" Type="varchar" MaxLength="50" />
+    <Property Name="source" Type="varchar" MaxLength="50" />
+    <Property Name="destination" Type="varchar" MaxLength="50" />
+    <Property Name="arrival_time" Type="time" Precision="7" />
+    <Property Name="departure_time" Type="time" Precision="7" />
+    <Property Name="is_active" Type="bit" />
+  </EntityType>
+  <EntityType Name="UserAccount">
+    <Key>
+      <PropertyRef Name="user_id" />
+    </Key>
+    <Property Name="user_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="username" Type="varchar" MaxLength="50" />
+    <Property Name="user_email" Type="varchar" MaxLength="50" />
+    <Property Name="user_password" Type="varchar" MaxLength="50" />
+    <Property Name="age" Type="int" />
+    <Property Name="phone_number" Type="varchar" MaxLength="20" />
+    <Property Name="address" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Wallet">
+    <Key>
+      <PropertyRef Name="wallet_id" />
+    </Key>
+    <Property Name="wallet_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="user_id" Type="int" />
+    <Property Name="user_name" Type="varchar" MaxLength="20" />
+    <Property Name="balance" Type="float" />
+  </EntityType>
+  <Association Name="FK__Bookings__train___5D60DB10">
+    <End Role="Trains" Type="Self.Trains" Multiplicity="0..1" />
+    <End Role="Bookings" Type="Self.Bookings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Trains">
+        <PropertyRef Name="train_id" />
+      </Principal>
+      <Dependent Role="Bookings">
+        <PropertyRef Name="train_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Bookings__user_i__5C6CB6D7">
+    <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+    <End Role="Bookings" Type="Self.Bookings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="user_id" />
+      </Principal>
+      <Dependent Role="Bookings">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TrainPric__train__57A801BA">
+    <End Role="Trains" Type="Self.Trains" Multiplicity="0..1" />
+    <End Role="TrainPrice" Type="Self.TrainPrice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Trains">
+        <PropertyRef Name="train_id" />
+      </Principal>
+      <Dependent Role="TrainPrice">
+        <PropertyRef Name="train_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Wallet__user_id__6225902D">
+    <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+    <End Role="Wallet" Type="Self.Wallet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="user_id" />
+      </Principal>
+      <Dependent Role="Wallet">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="deductAmountFromWallet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userId" Type="int" Mode="In" />
+    <Parameter Name="totalPrice" Type="float" Mode="In" />
+    <Parameter Name="trainId" Type="int" Mode="In" />
+    <Parameter Name="trainClass" Type="varchar" Mode="In" />
+    <Parameter Name="age" Type="int" Mode="In" />
+  </Function>
+  <Function Name="refund_amount_to_wallet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="user_id" Type="int" Mode="In" />
+    <Parameter Name="amount" Type="float" Mode="In" />
+    <Parameter Name="train_id" Type="int" Mode="In" />
+    <Parameter Name="class_type" Type="varchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="Train_Reservation_System_ModelStoreContainer">
+    <EntitySet Name="AdminAccount" EntityType="Self.AdminAccount" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Bookings" EntityType="Self.Bookings" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TrainPrice" EntityType="Self.TrainPrice" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Trains" EntityType="Self.Trains" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserAccount" EntityType="Self.UserAccount" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Wallet" EntityType="Self.Wallet" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__Bookings__train___5D60DB10" Association="Self.FK__Bookings__train___5D60DB10">
+      <End Role="Trains" EntitySet="Trains" />
+      <End Role="Bookings" EntitySet="Bookings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Bookings__user_i__5C6CB6D7" Association="Self.FK__Bookings__user_i__5C6CB6D7">
+      <End Role="UserAccount" EntitySet="UserAccount" />
+      <End Role="Bookings" EntitySet="Bookings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TrainPric__train__57A801BA" Association="Self.FK__TrainPric__train__57A801BA">
+      <End Role="Trains" EntitySet="Trains" />
+      <End Role="TrainPrice" EntitySet="TrainPrice" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Wallet__user_id__6225902D" Association="Self.FK__Wallet__user_id__6225902D">
+      <End Role="UserAccount" EntitySet="UserAccount" />
+      <End Role="Wallet" EntitySet="Wallet" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

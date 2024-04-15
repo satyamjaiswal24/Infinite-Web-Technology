@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Train_Reservation_System_Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="AdminAccount">
+    <Key>
+      <PropertyRef Name="admin_id" />
+    </Key>
+    <Property Name="admin_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="admin_name" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="admin_email_id" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="admin_password" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Booking">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="user_id" Type="Int32" />
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="age" Type="Int32" />
+    <Property Name="train_id" Type="Int32" />
+    <Property Name="pnr_no" Type="Int32" />
+    <Property Name="train_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="booking_date" Type="DateTime" Precision="0" />
+    <Property Name="arrival_time" Type="Time" Precision="7" />
+    <Property Name="departure_time" Type="Time" Precision="7" />
+    <Property Name="trainClass" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="total_price" Type="Double" />
+    <Property Name="seat_no" Type="Int32" />
+    <Property Name="status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Train" Relationship="Self.FK__Bookings__train___5D60DB10" FromRole="Bookings" ToRole="Trains" />
+    <NavigationProperty Name="UserAccount" Relationship="Self.FK__Bookings__user_i__5C6CB6D7" FromRole="Bookings" ToRole="UserAccount" />
+  </EntityType>
+  <EntityType Name="TrainPrice">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="train_id" Type="Int32" />
+    <Property Name="train_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="first_class_price" Type="Double" />
+    <Property Name="second_class_price" Type="Double" />
+    <Property Name="sleeper_class_price" Type="Double" />
+    <Property Name="first_class_tickets_available" Type="Int32" />
+    <Property Name="second_class_tickets_available" Type="Int32" />
+    <Property Name="sleeper_class_tickets_available" Type="Int32" />
+    <Property Name="total_available_tickets" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="Train" Relationship="Self.FK__TrainPric__train__57A801BA" FromRole="TrainPrice" ToRole="Trains" />
+  </EntityType>
+  <EntityType Name="Train">
+    <Key>
+      <PropertyRef Name="train_id" />
+    </Key>
+    <Property Name="train_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="train_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="source" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="destination" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="arrival_time" Type="Time" Precision="7" />
+    <Property Name="departure_time" Type="Time" Precision="7" />
+    <Property Name="is_active" Type="Boolean" />
+    <NavigationProperty Name="Bookings" Relationship="Self.FK__Bookings__train___5D60DB10" FromRole="Trains" ToRole="Bookings" />
+    <NavigationProperty Name="TrainPrices" Relationship="Self.FK__TrainPric__train__57A801BA" FromRole="Trains" ToRole="TrainPrice" />
+  </EntityType>
+  <EntityType Name="UserAccount">
+    <Key>
+      <PropertyRef Name="user_id" />
+    </Key>
+    <Property Name="user_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="user_email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="user_password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="age" Type="Int32" />
+    <Property Name="phone_number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="address" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Bookings" Relationship="Self.FK__Bookings__user_i__5C6CB6D7" FromRole="UserAccount" ToRole="Bookings" />
+    <NavigationProperty Name="Wallets" Relationship="Self.FK__Wallet__user_id__6225902D" FromRole="UserAccount" ToRole="Wallet" />
+  </EntityType>
+  <EntityType Name="Wallet">
+    <Key>
+      <PropertyRef Name="wallet_id" />
+    </Key>
+    <Property Name="wallet_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="user_id" Type="Int32" />
+    <Property Name="user_name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="balance" Type="Double" />
+    <NavigationProperty Name="UserAccount" Relationship="Self.FK__Wallet__user_id__6225902D" FromRole="Wallet" ToRole="UserAccount" />
+  </EntityType>
+  <Association Name="FK__Bookings__train___5D60DB10">
+    <End Role="Trains" Type="Self.Train" Multiplicity="0..1" />
+    <End Role="Bookings" Type="Self.Booking" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Trains">
+        <PropertyRef Name="train_id" />
+      </Principal>
+      <Dependent Role="Bookings">
+        <PropertyRef Name="train_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Bookings__user_i__5C6CB6D7">
+    <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+    <End Role="Bookings" Type="Self.Booking" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="user_id" />
+      </Principal>
+      <Dependent Role="Bookings">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TrainPric__train__57A801BA">
+    <End Role="Trains" Type="Self.Train" Multiplicity="0..1" />
+    <End Role="TrainPrice" Type="Self.TrainPrice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Trains">
+        <PropertyRef Name="train_id" />
+      </Principal>
+      <Dependent Role="TrainPrice">
+        <PropertyRef Name="train_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Wallet__user_id__6225902D">
+    <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
+    <End Role="Wallet" Type="Self.Wallet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserAccount">
+        <PropertyRef Name="user_id" />
+      </Principal>
+      <Dependent Role="Wallet">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Train_Reservation_System_Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="AdminAccounts" EntityType="Self.AdminAccount" />
+    <EntitySet Name="Bookings" EntityType="Self.Booking" />
+    <EntitySet Name="TrainPrices" EntityType="Self.TrainPrice" />
+    <EntitySet Name="Trains" EntityType="Self.Train" />
+    <EntitySet Name="UserAccounts" EntityType="Self.UserAccount" />
+    <EntitySet Name="Wallets" EntityType="Self.Wallet" />
+    <AssociationSet Name="FK__Bookings__train___5D60DB10" Association="Self.FK__Bookings__train___5D60DB10">
+      <End Role="Trains" EntitySet="Trains" />
+      <End Role="Bookings" EntitySet="Bookings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Bookings__user_i__5C6CB6D7" Association="Self.FK__Bookings__user_i__5C6CB6D7">
+      <End Role="UserAccount" EntitySet="UserAccounts" />
+      <End Role="Bookings" EntitySet="Bookings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TrainPric__train__57A801BA" Association="Self.FK__TrainPric__train__57A801BA">
+      <End Role="Trains" EntitySet="Trains" />
+      <End Role="TrainPrice" EntitySet="TrainPrices" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Wallet__user_id__6225902D" Association="Self.FK__Wallet__user_id__6225902D">
+      <End Role="UserAccount" EntitySet="UserAccounts" />
+      <End Role="Wallet" EntitySet="Wallets" />
+    </AssociationSet>
+    <FunctionImport Name="deductAmountFromWallet">
+      <Parameter Name="userId" Mode="In" Type="Int32" />
+      <Parameter Name="totalPrice" Mode="In" Type="Double" />
+      <Parameter Name="trainId" Mode="In" Type="Int32" />
+      <Parameter Name="trainClass" Mode="In" Type="String" />
+      <Parameter Name="age" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="refund_amount_to_wallet">
+      <Parameter Name="user_id" Mode="In" Type="Int32" />
+      <Parameter Name="amount" Mode="In" Type="Double" />
+      <Parameter Name="train_id" Mode="In" Type="Int32" />
+      <Parameter Name="class_type" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="de6591bf2ddd468fa691f5a4d86adb40" Name="Diagram1">
+        <EntityTypeShape EntityType="Train_Reservation_System_Model.AdminAccount" Width="1.5" PointX="5.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="Train_Reservation_System_Model.Booking" Width="1.5" PointX="3" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Train_Reservation_System_Model.TrainPrice" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Train_Reservation_System_Model.Train" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Train_Reservation_System_Model.UserAccount" Width="1.5" PointX="0.75" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Train_Reservation_System_Model.Wallet" Width="1.5" PointX="3" PointY="10.75" IsExpanded="true" />
+        <AssociationConnector Association="Train_Reservation_System_Model.FK__Bookings__train___5D60DB10" ManuallyRouted="false" />
+        <AssociationConnector Association="Train_Reservation_System_Model.FK__Bookings__user_i__5C6CB6D7" ManuallyRouted="false" />
+        <AssociationConnector Association="Train_Reservation_System_Model.FK__TrainPric__train__57A801BA" ManuallyRouted="false" />
+        <AssociationConnector Association="Train_Reservation_System_Model.FK__Wallet__user_id__6225902D" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
