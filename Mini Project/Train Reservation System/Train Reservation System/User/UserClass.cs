@@ -247,7 +247,7 @@ namespace Train_Reservation_System.User
 
             try
             {
-                var activeTrains = db.Trains.Where(t => t.source == source && t.destination == destination).ToList();
+                var activeTrains = db.Trains.Where(t => t.source == source && t.destination == destination && t.is_active == true).ToList();
                 float trainPrince;
 
                 if (activeTrains.Count != 0)
@@ -266,8 +266,22 @@ namespace Train_Reservation_System.User
                         Console.WriteLine("\t\t-----------------------------------------------------------------------------------------------------------------------------\n");
                     }
 
-                    Console.Write("\n\t\t\t\tEnter train number you want to book:  ");
-                    int trainId = int.Parse(Console.ReadLine());
+
+                    int trainId;
+                    while (true)
+                    {
+                        Console.Write("\n\t\t\t\tEnter train number you want to book:  ");
+                        trainId = int.Parse(Console.ReadLine());
+                        var runningTrain = db.Trains.FirstOrDefault(t => t.train_id == trainId && t.source == source && t.destination == destination && t.is_active == true);
+                        if (runningTrain != null)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n\n\t\t\t\tThere is not train available by given your train number\n\n");
+                        }
+                    }
 
                     Console.WriteLine("\n\t\t\t\tWhich class you want to prefer: ");
 
@@ -315,31 +329,43 @@ namespace Train_Reservation_System.User
 
                     try
                     {
-                        Console.Write("\n\t\t\t\tHow many tickets you want (Maximum 5 tickets per user): ");
-                        int totalTickets = int.Parse(Console.ReadLine());
-                        float total_ticketPrice = trainPrice * totalTickets;
-
-                        if (checkMoney(total_ticketPrice, userId))
+                        while (true)
                         {
-                            bool flag = InsertBookingDetails(userId, totalTickets, trainId, activeTrains, train_class, bookingDate, total_ticketPrice);
-
-                            if (flag == true)
+                            Console.Write("\n\t\t\t\tHow many tickets you want (Maximum 5 tickets per user): ");
+                            int totalTickets = int.Parse(Console.ReadLine());
+                            if (totalTickets > 5) 
                             {
-                                Console.WriteLine("\n\n\n\t\t\t\t-----  Tickets booked successfully!! -----");
-                                exitLoop();
-                                
+                                Console.WriteLine("\n\t\t\t\tSorry ! You can buy maximum 5 tickets only.");
                             }
                             else
                             {
-                                Console.WriteLine("\n\n\n\t\t\t\t-----  Ticket Booked Failed!!  -----");
-                                exitLoop();
+                                float total_ticketPrice = trainPrice * totalTickets;
+
+                                if (checkMoney(total_ticketPrice, userId))
+                                {
+                                    bool flag = InsertBookingDetails(userId, totalTickets, trainId, activeTrains, train_class, bookingDate, total_ticketPrice);
+
+                                    if (flag == true)
+                                    {
+                                        Console.WriteLine("\n\n\n\t\t\t\t-----  Tickets booked successfully!! -----");
+                                        exitLoop();
+
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("\n\n\n\t\t\t\t-----  Ticket Booked Failed!!  -----");
+                                        exitLoop();
+                                    }
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("\n\t\t\t\tYou don't have enough money. Please add money in your wallet");
+                                    exitLoop();
+                                    return;
+                                }
+                                break;
                             }
-                        }
-                        else
-                        {
-                            Console.WriteLine("\n\t\t\t\tYou don't have enough money. Please add money in your wallet");
-                            exitLoop();
-                            return;
                         }
                     }
                     catch (Exception e)
@@ -445,25 +471,25 @@ namespace Train_Reservation_System.User
                     TimeSpan? arrivalTime = activeTrains.FirstOrDefault(t => t.train_id == trainId)?.arrival_time;
                     TimeSpan? departureTime = activeTrains.FirstOrDefault(t => t.train_id == trainId)?.departure_time;
 
-                    if (age > 0 && age <= 1)
+                    if (age > 0 && age <= 5)
                     {
                         totalPrice = 0;
-                        Console.WriteLine($"Name: {userName} and Age: {age}");
-                        Console.WriteLine("Little Champs - Free Ticket ");
+                        Console.WriteLine($"\n\n\t\t\t\tName: {userName} and Age: {age}");
+                        Console.WriteLine("\n\t\t\t\tLittle Champs - Free Ticket ");
 
                     }
                     else if (age >= 60)
                     { 
                         float discount_money = totalPrice - ((totalPrice * 30) / 100);
-                        Console.WriteLine($"Name: {userName} and Age: {age}");
-                        Console.WriteLine($"Senior Citizen, Price with discount: {discount_money}rs");
+                        Console.WriteLine($"\n\n\t\t\t\tName: {userName} and Age: {age}");
+                        Console.WriteLine($"\n\t\t\t\tSenior Citizen, Price with discount: {discount_money}rs");
                         totalPrice = discount_money;
 
                     }
                     else
                     {
-                        Console.WriteLine($"Name: {userName} and Age: {age}");
-                        Console.WriteLine($"Ticket Booked, Price: {totalPrice}rs");
+                        Console.WriteLine($"\n\n\t\t\t\tName: {userName} and Age: {age}");
+                        Console.WriteLine($"\n\t\t\t\tTicket Booked, Price: {totalPrice}rs");
 
                     }
 
