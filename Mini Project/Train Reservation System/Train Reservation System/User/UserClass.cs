@@ -9,10 +9,16 @@ namespace Train_Reservation_System.User
 {
     public class UserClass
     {
-        static Train_Reservation_System_Entities db = new Train_Reservation_System_Entities();
+        static Train_Reservation_System_Entities db;
+
+        public UserClass(Train_Reservation_System_Entities udb)
+        {
+            db = udb;
+        }
+
 
         // Method for creating a new user account
-        public static void Creating_New_User_Account()
+        public void Creating_New_User_Account()
         {
             Console.WriteLine("\n\n\n\n\t\t\t\t\t------  Creating New User  ------\n\n\n\n\n");
             Console.Write("\t\t\t* Create your User Name: ");
@@ -58,25 +64,41 @@ namespace Train_Reservation_System.User
                 address = address,
             };
 
+
             try
             {
                 db.UserAccounts.Add(new_account);
                 db.SaveChanges();
+
+                // After saving the user account, retrieve the newly created user ID
+                int userId = new_account.user_id;
+
+                // Create a corresponding entry in the Wallet table with a balance of 0
+                var new_wallet = new Wallet
+                {
+                    user_id = userId,
+                    user_name = username,
+                    balance = 0
+                };
+
+                db.Wallets.Add(new_wallet);
+                db.SaveChanges();
+
                 Console.WriteLine("\n\n\t\t\t\t\t------  User registration successful  ------\n\n");
                 exitLoop();
 
             }
             catch (Exception e)
             {
-                Console.WriteLine("\n\n\t\t\t\tError: "+e.Message);
+                Console.WriteLine("\n\n\t\t\t\tError: " + e.Message);
                 exitLoop();
             }
         }
 
         // Method for existing user login
-        public static void existing_user()
+        public void existing_user()
         {
-            Console.WriteLine("\n\t\t\t\t\t------  User Login Section  ------\n\n\n\n\n");
+            Console.WriteLine("\n\t\t\t\t\t------  User Login Section  ------\n\n\n");
 
             bool flag = true;
             Console.WriteLine("\n\n\n\n");
@@ -120,6 +142,7 @@ namespace Train_Reservation_System.User
                             case 1:
                                 Console.WriteLine("\n\n\n");
                                 User_booking_details(user.user_id);
+                                db.SaveChanges();
                                 break;
 
                             case 2:
@@ -187,10 +210,9 @@ namespace Train_Reservation_System.User
             // Retrieving and displaying available trains from the database
 
             var activeTrains = db.Trains.Where(t => t.is_active == true).ToList();
-            Console.WriteLine("\n\n\n\t\t--------------------------------------------------------------------------------------------------");
-            Console.WriteLine("| \t\tTrain Name\t| Source\t| Destination\t| Arrival Time | Departure Time |");
-            Console.WriteLine("--------------------------------------------------------------------------------------------------\n");
-
+            Console.WriteLine("\n\n\n\t\t------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("\t\t|\tTrain Number\t| \tTrain Name\t| Source\t| Destination\t| Arrival Time | Departure Time |");
+            Console.WriteLine("\t\t------------------------------------------------------------------------------------------------------------\n");
             foreach (var train in activeTrains)
             {
                 var train_details = db.TrainPrices.FirstOrDefault(tp => tp.train_id == train.train_id);
@@ -198,7 +220,7 @@ namespace Train_Reservation_System.User
                 Console.WriteLine($"\n\t\t    First Class: {train_details.first_class_price}rs ({train_details.first_class_tickets_available} seats)" +
                                   $"\tSecond Class: {train_details.second_class_price}rs ({train_details.second_class_tickets_available} seats)" +
                                   $"\tSleeper Class: {train_details.sleeper_class_price}rs ({train_details.sleeper_class_tickets_available} seats)");
-                Console.WriteLine("\t\t-----------------------------------------------------------------------------------------------------------------------------\n");
+                Console.WriteLine("\t\t------------------------------------------------------------------------------------------------------------\n");
             }
         }
 
@@ -321,8 +343,27 @@ namespace Train_Reservation_System.User
                         }
                     }
 
-                    Console.Write("\n\t\t\t\tEnter booking date (YYYY-MM-DD): ");
-                    DateTime bookingDate = DateTime.ParseExact(Console.ReadLine(), "yyyy-MM-dd", null);
+                    DateTime bookingDate;
+                    while (true)
+                    {
+                        try
+                        {
+                            Console.Write("\n\t\t\t\tEnter booking date (YYYY-MM-DD): ");
+                            bookingDate = DateTime.ParseExact(Console.ReadLine(), "yyyy-MM-dd", null);
+                            if (bookingDate >= DateTime.Now)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n\t\t\t\tEnter Correct Date");
+                            }
+                        }
+                        catch(Exception e)
+                        {
+                            Console.WriteLine("\n\n\t\t\t\tError: "+e.Message);
+                        }
+                    }
 
 
 
@@ -343,7 +384,7 @@ namespace Train_Reservation_System.User
 
                                 if (checkMoney(total_ticketPrice, userId))
                                 {
-                                    bool flag = InsertBookingDetails(userId, totalTickets, trainId, activeTrains, train_class, bookingDate, total_ticketPrice);
+                                    bool flag = InsertBookingDetails(userId, totalTickets, trainId, activeTrains, train_class, bookingDate,trainPrice);
 
                                     if (flag == true)
                                     {
@@ -409,7 +450,7 @@ namespace Train_Reservation_System.User
         {
             // Logic to generate a unique seat number for the given train
             Random random = new Random();
-            int seatNumber = random.Next(1, 1000);
+            int seatNumber = random.Next(1, 100);
             return seatNumber;
         }
 
@@ -425,11 +466,13 @@ namespace Train_Reservation_System.User
 
         // Method to insert booking details into the database
 
-        private static bool InsertBookingDetails(int userId, int totalTickets, int trainId, List<Train> activeTrains, string train_class, DateTime bookingDate, float totalPrice)
+        private static bool InsertBookingDetails(int userId, int totalTickets, int trainId, List<Train> activeTrains, string train_class, DateTime bookingDate, float trainPrice)
         {
+            float totalPrice = 0;
 
             try
             {
+                int age = 0;
                 for (int i = 0; i < totalTickets; i++)
                 {
                     // Generate unique seat number (you may need to adjust this logic)
@@ -441,13 +484,12 @@ namespace Train_Reservation_System.User
                     Console.Write("\n\t\t\t\tEnter Your Name: ");
                     string userName = Console.ReadLine();
 
-                    int age;
                     while (true)
                     {
                         try
                         {
                             Console.Write("\n\t\t\t\tEnter Your Age: ");
-                             age = int.Parse(Console.ReadLine());
+                            age = int.Parse(Console.ReadLine());
                             
                             if(age>=1 || age <= 100)
                             {
@@ -473,24 +515,24 @@ namespace Train_Reservation_System.User
 
                     if (age > 0 && age <= 5)
                     {
-                        totalPrice = 0;
+                        totalPrice += 0;
                         Console.WriteLine($"\n\n\t\t\t\tName: {userName} and Age: {age}");
                         Console.WriteLine("\n\t\t\t\tLittle Champs - Free Ticket ");
 
                     }
                     else if (age >= 60)
                     { 
-                        float discount_money = totalPrice - ((totalPrice * 30) / 100);
+                        float discount_money = trainPrice - ((trainPrice * 30) / 100);
                         Console.WriteLine($"\n\n\t\t\t\tName: {userName} and Age: {age}");
                         Console.WriteLine($"\n\t\t\t\tSenior Citizen, Price with discount: {discount_money}rs");
-                        totalPrice = discount_money;
+                        totalPrice += discount_money;
 
                     }
                     else
                     {
+                        totalPrice += trainPrice;
                         Console.WriteLine($"\n\n\t\t\t\tName: {userName} and Age: {age}");
-                        Console.WriteLine($"\n\t\t\t\tTicket Booked, Price: {totalPrice}rs");
-
+                        Console.WriteLine($"\n\t\t\t\tTicket Booked, Price: {trainPrice}rs");
                     }
 
                     Booking booking = new Booking
@@ -501,7 +543,7 @@ namespace Train_Reservation_System.User
                         train_id = trainId,
                         pnr_no = pnrNumber,
                         train_name = trainName,
-                        booking_date = bookingDate,
+                        travelling_date = bookingDate,
                         arrival_time = arrivalTime,
                         departure_time = departureTime,
                         trainClass = train_class,
@@ -514,10 +556,12 @@ namespace Train_Reservation_System.User
 
                     
                     db.SaveChanges();
-                    db.deductAmountFromWallet(userId, totalPrice, trainId, train_class, age);
 
                 }
 
+                db.deductAmountFromWallet(userId, totalPrice, trainId, train_class, age);
+             
+                Console.WriteLine($"\n\t\t\t\tTotal Amount : {totalPrice}");
 
 
                 return true;
@@ -606,15 +650,16 @@ namespace Train_Reservation_System.User
                     foreach (var record in history)
                     {
                         Console.WriteLine($"\n\t\t\t\tPNR No: {record.pnr_no}");
+                        Console.WriteLine($"\n\t\t\t\tUser Name: {record.username}");
                         Console.WriteLine($"\n\t\t\t\tStatus: {record.status}");
-                        Console.WriteLine($"\n\t\t\t\tBooking Date: {record.booking_date}");
+                        Console.WriteLine($"\n\t\t\t\tBooking Date: {record.travelling_date}");
                         Console.WriteLine($"\n\t\t\t\tTrain Name: {record.train_name}");
                         Console.WriteLine($"\n\t\t\t\tTotal Price: {record.total_price}");
 
                         if (record.status == "cancelled")
                         {
                             // If the booking is cancelled, display the cancellation date
-                            Console.WriteLine($"\n\t\t\t\tCancellation Date: {record.booking_date}");
+                            Console.WriteLine($"\n\t\t\t\tCancellation Date: {record.travelling_date}");
                         }
 
                         Console.WriteLine("\n\t\t\t\t--------------------------------------------");
@@ -636,6 +681,8 @@ namespace Train_Reservation_System.User
                 }
             }
         }
+
+
 
         // Method to clear the console screen and wait before exiting
 

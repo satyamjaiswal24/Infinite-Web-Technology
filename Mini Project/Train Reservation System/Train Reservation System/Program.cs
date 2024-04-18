@@ -11,6 +11,7 @@ namespace Train_Reservation_System
 {
     class Program
     {
+        static Train_Reservation_System_Entities db = new Train_Reservation_System_Entities(); 
         static void Main(string[] args)
         {
             Account();
@@ -39,15 +40,16 @@ namespace Train_Reservation_System
                     {
                         case 1:
                             Console.Clear();
-                          
+
 
                             // Implement admin login logic
-                            AdminClass.existing_admin();
+                            AdminClass admin = new AdminClass(db);
+                            admin.existing_admin();
                             break;
 
                         case 2:
                             Console.Clear();
-                            Console.WriteLine("\n\t\t\t\t-----  User Log In  -----\n\n\n\n");
+                            Console.WriteLine("\n\t\t\t\t-----  User Section  -----\n\n\n\n");
                             Console.WriteLine("\n\t\t\t\t" +
                                 "a.Existing User" +
                                 "\n\n\t\t\t\t" +
@@ -62,11 +64,13 @@ namespace Train_Reservation_System
                                 {
                                     case 'a':
                                         Console.Clear();
-                                       UserClass.existing_user();
+                                        UserClass user1 = new UserClass(db);
+                                        user1.existing_user();
                                         break;
                                     case 'b':
                                         Console.Clear();
-                                       UserClass.Creating_New_User_Account();
+                                        UserClass user2 = new UserClass(db);
+                                        user2.Creating_New_User_Account();
                                         break;
 
                                     default:
@@ -78,6 +82,7 @@ namespace Train_Reservation_System
                             catch(Exception e)
                             {
                                 Console.WriteLine("\n\t\t\t\tError: " + e.Message+"\n\n");
+                                exitLoop();
                             }
 
 
@@ -90,17 +95,26 @@ namespace Train_Reservation_System
 
                         default:
 
-                            Console.WriteLine("\n\nChoose valid Option!!");
+                            Console.WriteLine("\n\n\t\t\t\t\tChoose valid Option!!");
+                            exitLoop();
                             break;
                     }
                 }
                 catch(Exception e)
                 {
-                    Console.WriteLine("\nError: " + e.Message + "\n\n");
+                    Console.WriteLine("\n\t\t\t\tError: " + e.Message + "\n\n");
+                    exitLoop();
                 }
             }
         }
-
+        static void exitLoop()
+        {
+            for (int i = 1; i >= 0; i--)
+            {
+                Thread.Sleep(1000);
+            }
+            Console.Clear();
+        }
     }
 
 }

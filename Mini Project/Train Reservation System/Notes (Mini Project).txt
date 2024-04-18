@@ -1,0 +1,12 @@
+
+*  Our backend SQL system flawlessly handles various tasks:
+	1. Deducting funds from users' wallet balances during transactions.
+	2. Updating seat availability instantly when users book tickets.
+	3. Quickly processing refunds and adjusting wallet balances accordingly.
+	4. Adding seats back to availability when users cancel tickets.
+
+*  Notably, there's an issue:
+
+	1. The console isn't reflecting changes in wallet balances and seat availability upon ticket bookings.
+
+Despite this, the system generally performs well.

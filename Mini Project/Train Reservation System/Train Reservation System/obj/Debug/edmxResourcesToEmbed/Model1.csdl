@@ -20,7 +20,7 @@
     <Property Name="train_id" Type="Int32" />
     <Property Name="pnr_no" Type="Int32" />
     <Property Name="train_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="booking_date" Type="DateTime" Precision="0" />
+    <Property Name="travelling_date" Type="DateTime" Precision="0" />
     <Property Name="arrival_time" Type="Time" Precision="7" />
     <Property Name="departure_time" Type="Time" Precision="7" />
     <Property Name="trainClass" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
@@ -72,7 +72,7 @@
     <Property Name="phone_number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="address" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="Bookings" Relationship="Self.FK__Bookings__user_i__5C6CB6D7" FromRole="UserAccount" ToRole="Bookings" />
-    <NavigationProperty Name="Wallets" Relationship="Self.FK__Wallet__user_id__6225902D" FromRole="UserAccount" ToRole="Wallet" />
+    <NavigationProperty Name="Wallets" Relationship="Self.FK__Wallet__user_id__67DE6983" FromRole="UserAccount" ToRole="Wallet" />
   </EntityType>
   <EntityType Name="Wallet">
     <Key>
@@ -82,7 +82,7 @@
     <Property Name="user_id" Type="Int32" />
     <Property Name="user_name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="balance" Type="Double" />
-    <NavigationProperty Name="UserAccount" Relationship="Self.FK__Wallet__user_id__6225902D" FromRole="Wallet" ToRole="UserAccount" />
+    <NavigationProperty Name="UserAccount" Relationship="Self.FK__Wallet__user_id__67DE6983" FromRole="Wallet" ToRole="UserAccount" />
   </EntityType>
   <Association Name="FK__Bookings__train___5D60DB10">
     <End Role="Trains" Type="Self.Train" Multiplicity="0..1" />
@@ -120,7 +120,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Wallet__user_id__6225902D">
+  <Association Name="FK__Wallet__user_id__67DE6983">
     <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
     <End Role="Wallet" Type="Self.Wallet" Multiplicity="*" />
     <ReferentialConstraint>
@@ -151,7 +151,7 @@
       <End Role="Trains" EntitySet="Trains" />
       <End Role="TrainPrice" EntitySet="TrainPrices" />
     </AssociationSet>
-    <AssociationSet Name="FK__Wallet__user_id__6225902D" Association="Self.FK__Wallet__user_id__6225902D">
+    <AssociationSet Name="FK__Wallet__user_id__67DE6983" Association="Self.FK__Wallet__user_id__67DE6983">
       <End Role="UserAccount" EntitySet="UserAccounts" />
       <End Role="Wallet" EntitySet="Wallets" />
     </AssociationSet>

@@ -21,7 +21,7 @@
           <ScalarProperty Name="train_id" ColumnName="train_id" />
           <ScalarProperty Name="pnr_no" ColumnName="pnr_no" />
           <ScalarProperty Name="train_name" ColumnName="train_name" />
-          <ScalarProperty Name="booking_date" ColumnName="booking_date" />
+          <ScalarProperty Name="travelling_date" ColumnName="travelling_date" />
           <ScalarProperty Name="arrival_time" ColumnName="arrival_time" />
           <ScalarProperty Name="departure_time" ColumnName="departure_time" />
           <ScalarProperty Name="trainClass" ColumnName="trainClass" />

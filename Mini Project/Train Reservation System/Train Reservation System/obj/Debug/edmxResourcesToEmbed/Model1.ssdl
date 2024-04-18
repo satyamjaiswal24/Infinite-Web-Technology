@@ -20,7 +20,7 @@
     <Property Name="train_id" Type="int" />
     <Property Name="pnr_no" Type="int" />
     <Property Name="train_name" Type="varchar" MaxLength="50" />
-    <Property Name="booking_date" Type="date" />
+    <Property Name="travelling_date" Type="date" />
     <Property Name="arrival_time" Type="time" Precision="7" />
     <Property Name="departure_time" Type="time" Precision="7" />
     <Property Name="trainClass" Type="varchar" MaxLength="20" />
@@ -112,7 +112,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Wallet__user_id__6225902D">
+  <Association Name="FK__Wallet__user_id__67DE6983">
     <End Role="UserAccount" Type="Self.UserAccount" Multiplicity="0..1" />
     <End Role="Wallet" Type="Self.Wallet" Multiplicity="*" />
     <ReferentialConstraint>
@@ -156,7 +156,7 @@
       <End Role="Trains" EntitySet="Trains" />
       <End Role="TrainPrice" EntitySet="TrainPrice" />
     </AssociationSet>
-    <AssociationSet Name="FK__Wallet__user_id__6225902D" Association="Self.FK__Wallet__user_id__6225902D">
+    <AssociationSet Name="FK__Wallet__user_id__67DE6983" Association="Self.FK__Wallet__user_id__67DE6983">
       <End Role="UserAccount" EntitySet="UserAccount" />
       <End Role="Wallet" EntitySet="Wallet" />
     </AssociationSet>

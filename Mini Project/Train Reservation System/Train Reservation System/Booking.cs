@@ -21,7 +21,7 @@ namespace Train_Reservation_System
         public Nullable<int> train_id { get; set; }
         public Nullable<int> pnr_no { get; set; }
         public string train_name { get; set; }
-        public Nullable<System.DateTime> booking_date { get; set; }
+        public Nullable<System.DateTime> travelling_date { get; set; }
         public Nullable<System.TimeSpan> arrival_time { get; set; }
         public Nullable<System.TimeSpan> departure_time { get; set; }
         public string trainClass { get; set; }

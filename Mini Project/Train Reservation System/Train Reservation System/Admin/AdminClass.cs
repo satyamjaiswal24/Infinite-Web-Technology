@@ -9,10 +9,15 @@ namespace Train_Reservation_System.Admin
 {
     public class AdminClass
     {
-        static Train_Reservation_System_Entities db = new Train_Reservation_System_Entities();
+        static Train_Reservation_System_Entities db;
+
+        public AdminClass(Train_Reservation_System_Entities udb)
+        {
+            db = udb;
+        }
 
         // Method to handle existing admin login
-        public static void existing_admin()
+        public void existing_admin()
         {
             Console.Clear();
             Console.WriteLine("\n\t\t\t\t\t-----  Admin LogIn Section  -----");
@@ -233,7 +238,7 @@ namespace Train_Reservation_System.Admin
             Console.Clear();
             while (flag)
             {
-                Console.WriteLine("\n\t\t\t\t-----  What do You want to Update  ***********************************\n\n\n");
+                Console.WriteLine("\n\t\t\t\t\t-----  What do You want to Update  -----\n\n\n");
                 showAllTrains();
                 Console.WriteLine("\n\n\t\t\t\t" +
                     "1. Arrival and Departure time" +
