@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function multiplyBy() {
+          //Here we will give the value of first and second number
+          var num1 = parseFloat(document.getElementById("firstNumber").value);
+          var num2 = parseFloat(document.getElementById("secondNumber").value);
+         
+          // Result will be the product of num 1 and num 2 for multiplication ...
+          document.getElementById("result").innerHTML = num1 * num2;
+        }
+         
+        function divideBy() {
+          // Here we will be Giving values
+          var num1 = parseFloat(document.getElementById("firstNumber").value);
+         
+          // Get the value entered in the input field with the id "secondNumber"
+          var num2 = parseFloat(document.getElementById("secondNumber").value);
+         
+          if (num2 == 0) {
+            document.getElementById("result").innerHTML = "Error: Please enter a valid second number";
+          } else {
+            document.getElementById("result").innerHTML = num1 / num2;
+          }
+        }
+        </script>
+        
+</head>
+<body>
+    <h1>Multiplication and Division Calculator</h1>
+    <label for="firstNumber">First Number:</label>
+    <input type="number" id="firstNumber" placeholder="Enter first number">
+    <br>
+    <label for="secondNumber">Second Number:</label>
+    <input type="number" id="secondNumber" placeholder="Enter second number">
+    <br>
+    <input type="button" value="Multiply" onclick="multiplyBy()">
+    <input type="button" value="Divide" onclick="divideBy()">
+    <p id="result"></p>
+ 
+</body>
+</html>
