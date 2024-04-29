@@ -1,0 +1,20 @@
+﻿@model Customer
+@{
+    ViewBag.Title = "CustomerDetailsWithOrderId";
+}
+
+<h2>CustomerDetailsWithOrderId</h2>
+
+<h2>Customer Details with Order ID 10248</h2>
+
+@if (Model != null)
+{
+    <p>Customer ID: @Model.CustomerID</p>
+    <p>Company Name: @Model.CompanyName</p>
+    <p>Contact Name: @Model.ContactName</p>
+    <p>Country: @Model.Country</p> 
+}
+else
+{
+    <p>Customer not found.</p>\
+}

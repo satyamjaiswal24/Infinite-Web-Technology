@@ -1,0 +1,24 @@
+﻿@model List<Customer>
+@{
+    ViewBag.Title = "GermanCustomers";
+}
+
+<h2>GermanCustomers</h2>
+
+<table>
+    <tr>
+        <th>Customer ID</th>
+        <th>Company Name</th>
+        <th>Contact Name</th>
+        <!-- Add more headers if needed -->
+    </tr>
+    @foreach (var customer in Model)
+    {
+        <tr>
+            <td>@customer.CustomerID</td>
+            <td>@customer.CompanyName</td>
+            <td>@customer.ContactName</td>
+            <!-- Add more columns if needed -->
+        </tr>
+    }
+</table>
