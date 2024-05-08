@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\EkartApp_Assessment.props" />
+</Project>
